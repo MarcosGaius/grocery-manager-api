@@ -15,6 +15,11 @@ export const handleSerializationMiddleware =
         next();
       })
       .catch((error: ValidationError) => {
-        return res.status(400).json({ message: error.message });
+        const errorArray = error.inner.map((err) => {
+          const name = err.path?.toString() || err.name;
+          return { [name]: err.message };
+        });
+
+        return res.status(400).json(errorArray);
       });
   };
