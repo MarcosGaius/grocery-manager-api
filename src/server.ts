@@ -1,14 +1,20 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import app from "./app";
 import { connectToDatabase } from "./db";
 
-(async () => {
-  const SV_PORT = 3000;
+(() => {
+  const PORT = process.env.SERVER_PORT || 3000;
 
-  connectToDatabase((error: Error | null) => {
-    if (!error) {
-      app.listen(SV_PORT, () => {
-        console.log(`Server running at port ${SV_PORT}`);
+  connectToDatabase()
+    .then(() => {
+      console.log("Connected to the database!");
+      app.listen(PORT, () => {
+        console.log(`Server running at port ${PORT}`);
       });
-    }
-  });
+    })
+    .catch((error) => {
+      console.log("\nError during server initialization \n", error);
+    });
 })();

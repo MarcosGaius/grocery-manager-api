@@ -1,22 +1,8 @@
-import { MongoClient, Db } from "mongodb";
+import mongoose from "mongoose";
 
-let dbConnection: Db;
-
-const connectToDatabase = async (cb: any): Promise<any> => {
-  try {
-    const client = await MongoClient.connect(
-      "mongodb://127.0.0.1:27017/bookstore?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.6.1"
-    );
-    dbConnection = client.db();
-    return cb();
-  } catch (error) {
-    console.error(error);
-    return cb(error);
-  }
+const connectToDatabase = async (): Promise<void> => {
+  const DATABASE_URI = process.env.DB_CONNECTION_URI || "";
+  await mongoose.connect(DATABASE_URI);
 };
 
-const getDatabaseConnection = () => {
-  return dbConnection;
-};
-
-export { connectToDatabase, getDatabaseConnection };
+export { connectToDatabase };
